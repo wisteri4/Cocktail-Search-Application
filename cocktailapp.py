@@ -20,12 +20,12 @@ class CocktailAPI:
         img_response = requests.get(drink_image_url)
         img_data = img_response.content
     
-        pil_image = Image.open(io.BytesIO(img_data))
-        pil_image = pil_image.resize((250, 250))
+        take_image = Image.open(io.BytesIO(img_data))
+        resizeimg = take_image.resize((250, 250))
     
-        tk_image = ImageTk.PhotoImage(pil_image)
+        tkphotoimage = ImageTk.PhotoImage(resizeimg)
     
-        parent.searchresults.drink_image = tk_image
+        parent.searchresults.drink_image = tkphotoimage
     
         showthemdrink = f"""
         \nDrink name: {drink_name}
@@ -44,7 +44,7 @@ class CocktailAPI:
     
         parent.cocktailoutput.insert("1.0", showthemdrink) 
     
-        img_label = Label(parent.searchresults, image =tk_image, bg="#3A0519")
+        img_label = Label(parent.searchresults, image =tkphotoimage, bg="#3A0519")
         img_label.grid(row=0, column=0, padx=10) 
         
         
@@ -63,11 +63,13 @@ class CocktailAPI:
         
         if selected == "ID":
             if not lookitup.isdigit(): 
-                messagebox.showerror("Invalid ID", "Drink ID must be numeric")
+                messagebox.showerror("Invalid ID or Empty field", "Drink ID must be numeric")
                 return
             searchby_combo = f"https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i={lookitup}" 
         elif selected == "Name": 
-            
+            if not lookitup:
+                messagebox.showerror("Enter a Name", "The field is empty")
+                return
             accentwords = ["Frosé", "Frappé", "Autodafé"]
             if lookitup in accentwords:
                 lookitup.replace("é", "e")
@@ -238,4 +240,3 @@ class design(Tk):
 if __name__ == "__main__":
     mydrinkstore= design()
     mydrinkstore.mainloop()
-
